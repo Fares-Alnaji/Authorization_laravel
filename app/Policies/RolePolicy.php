@@ -3,96 +3,89 @@
 namespace App\Policies;
 
 use App\Models\Admin;
-use App\Models\City;
 use Illuminate\Auth\Access\HandlesAuthorization;
+use Spatie\Permission\Models\Role;
 
-class CityPolicy
+class RolePolicy
 {
     use HandlesAuthorization;
     /**
      * Determine whether the user can view any models.
-     *
-     * @param $actor
+     * @param \App\Model\Admin $admin
      * @return bool
      */
-    public function viewAny($actor)
+    public function viewAny(Admin $admin)
     {
         //
-        return $actor->hasPermissionTo('Read-Cities')
+        return $admin->hasPermissionTo('Read-Roles')
         ? $this->allow()
         : $this->deny();
     }
 
     /**
      * Determine whether the user can view the model.
-     * @param $actor
-     * @param City $city
+     * @param \App\Model\Admin $admin
+     * @param \App\Model\Role $role
      * @return bool
      */
-    public function view($actor, City $city)
+    public function view(Admin $admin, Role $role)
     {
         //
     }
 
     /**
      * Determine whether the user can create models.
-     * @param $actor
+     * @param \App\Model\Admin $admin
      * @return bool
      */
-    public function create($actor)
+    public function create(Admin $admin)
     {
         //
-        return $actor->hasPermissionTo('Create-City')
+        return $admin->hasPermissionTo('Create-Role')
         ? $this->allow()
         : $this->deny();
     }
 
     /**
      * Determine whether the user can update the model.
-     *  @param $actor
-     * @param City $city
+     * @param \App\Model\Admin $admin
+     * @param \App\Model\Role $role
      * @return bool
      */
-    public function update($actor, City $city)
+    public function update(Admin $admin, Role $role)
     {
         //
-        return $actor->hasPermissionTo('Update-City')
+        return $admin->hasPermissionTo('Update-Role')
         ? $this->allow()
         : $this->deny();
     }
 
     /**
      * Determine whether the user can delete the model.
-     * @param $actor
-     * @param City $city
-     *
+     * @param \App\Model\Admin $admin
+     * @param \App\Model\Role $role
+     * @return bool
      */
-    public function delete($actor, City $city)
+    public function delete(Admin $admin, Role $role)
     {
         //
-        return $actor->hasPermissionTo('Delete-City')
+        return $admin->hasPermissionTo('Delete-Role')
         ? $this->allow()
         : $this->deny();
     }
 
     /**
      * Determine whether the user can restore the model.
-     * @param $actor
-     * @param City $city
-     * @return bool
      */
-    public function restore($actor, City $city)
+    public function restore(Admin $admin, Role $role)
     {
         //
     }
 
     /**
      * Determine whether the user can permanently delete the model.
-     *  @param $actor
-     * @param City $city
-     * @return bool
      */
-    public function forceDelete($actor, City $city)
+    public function forceDelete(Admin $admin, Role $role)
     {
         //
     }
