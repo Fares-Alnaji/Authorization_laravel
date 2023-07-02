@@ -42,6 +42,12 @@
                                   @endif
                                   @csrf
                                   <div class="form-group">
+                                    <label>Rloe</label>
+                                    <select class="form-control" id="role_id" name="role_id">
+                                        @foreach ($roles as $role)
+                                            <option value="{{ $role->id }}">{{ $role->name }}</option>
+                                        @endforeach
+                                    </select>
                                     <label>city</label>
                                     <select class="form-control" id="city_id" name="city_id">
                                         @foreach ($cities as $city)
@@ -52,17 +58,17 @@
                                 <div class="form-group">
                                     <label for="name_en">Name Admin</label>
                                     <input type="text" class="form-control" id="user_name"
-                                      name="user_name" value="{{ old('user_name') }}" placeholder="Enter the Name">
+                                      name="user_name"  placeholder="Enter the Name">
                                 </div>
                                 <div class="form-group">
                                     <label for="name_er">Your Email</label>
                                     <input type="email" class="form-control" id="user_email"
-                                      name="user_email" value="{{ old('user_email') }}" placeholder="Enter Your Email">
+                                      name="user_email"  placeholder="Enter Your Email">
                                 </div>
                                 <div class="form-group">
                                     <label for="name_er">Your Password</label>
                                     <input type="password" class="form-control" id="user_password"
-                                      name="user_password" value="{{ old('user_password') }}" placeholder="Enter Your Password">
+                                      name="user_password"  placeholder="Enter Your Password">
                                 </div>
                                 <div class="form-group">
                                     <div class="form-check">

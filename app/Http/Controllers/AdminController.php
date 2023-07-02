@@ -2,10 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\AdminWelcomeEmail;
 use App\Models\Admin;
 use App\Models\City;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Spatie\Permission\Models\Role;
 
 class AdminController extends Controller
@@ -26,19 +28,21 @@ class AdminController extends Controller
     public function create()
     {
         //
+        $roles = Role::where('guard_name', '=', 'admin')->get();
         $data = City::all();
-        return response()->view('cms.admin.create', ['cities' => $data]);
+        return response()->view('cms.admin.create', ['cities' => $data, 'roles'=>$roles]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(Request $request , Admin $admin)
     {
         //
         $request->validate([
+            'role_id' => 'required|numeric|exists:roles,id',
             'user_name' => 'required|string|min:3|max:40|alpha',
-            'user_email' => 'required|email|unique:users,email',
+            'user_email' => 'required|email|unique:users,email,' . $admin->id,
             'city_id' => 'required|numeric|exists:cities,id',
             'active' => 'nullable|string|in:on',
             'user_password' => 'required|string'
@@ -48,11 +52,14 @@ class AdminController extends Controller
         $admin->name = $request->input('user_name');
         $admin->city_id = $request->input('city_id');
         $admin->email = $request->input('user_email');
-        $admin->password = Hash::make($request->input('user_password'));
+        $password =  $request->input('user_password');
+        $admin->password = Hash::make($password);
         $admin->active = $request->has('active');
         $admin->gender = $request->gender;
         $isSaved = $admin->save();
         if($isSaved){
+            $admin->assignRole($request->input('role_id'));
+            Mail::to([$admin])->send(new AdminWelcomeEmail($admin,$password));
             session()->flash('message', 'Admin created successfully');
             return redirect()->back();
         }
