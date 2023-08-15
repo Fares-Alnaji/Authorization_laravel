@@ -4,9 +4,12 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\EmailVerificationController;
 use App\Http\Controllers\Auth\ForgetPasswordController;
+use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\CityController;
 use App\Http\Controllers\ParmissionController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\SubCategoryController;
+use App\Http\Controllers\TaskController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -33,9 +36,15 @@ Route::prefix('cms/admin')->middleware(['auth:admin,user', 'verified'])->group(f
     Route::view('/', 'temp')->name('cms.dashboard');
     Route::resource('cities', CityController::class);
     Route::resource('admins', AdminController::class);
-    Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
+
+    Route::resource('categories' , CategoryController::class);
+    Route::resource('sub-categories', SubCategoryController::class);
+    Route::resource('tasks' , TaskController::class);
+
     Route::get('edit-password', [AuthController::class, 'editPassword'])->name('auth.edit-password');
     Route::put('edit-password', [AuthController::class, 'updatePassword']);
+
+    Route::get('logout', [AuthController::class, 'logout'])->name('auth.logout');
 });
 
 /* ---------------- Roles & Permission ---------------*/
