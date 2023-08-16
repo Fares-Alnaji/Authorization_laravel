@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
 use App\Models\Task;
 use Illuminate\Http\Request;
 
@@ -13,6 +14,8 @@ class TaskController extends Controller
     public function index()
     {
         //
+        $tasks = Task::all();
+        return response()->view('cms.tasks.index', ['tasks' => $tasks]);
     }
 
     /**
@@ -21,6 +24,8 @@ class TaskController extends Controller
     public function create()
     {
         //
+        $categories = Category::all();
+        return response()->view('cms.tasks.create',['categories' => $categories]);
     }
 
     /**

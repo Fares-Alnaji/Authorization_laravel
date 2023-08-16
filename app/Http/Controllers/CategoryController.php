@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Category;
+use Dotenv\Validator;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpFoundation\Response;
 
 class CategoryController extends Controller
 {
@@ -14,15 +16,16 @@ class CategoryController extends Controller
     {
         //
         $categories = Category::all();
-        return response()->view('cms.categories.index' , ['categories' => $categories]);
+        return response()->view('cms.categories.index', ['categories' => $categories]);
     }
 
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function create(Request $request)
     {
         //
+        return response()->view('cms.categories.create');
     }
 
     /**
@@ -31,6 +34,24 @@ class CategoryController extends Controller
     public function store(Request $request)
     {
         //
+        $validator = Validator($request->all(), [
+            'name' => 'required|string',
+        ]);
+
+        if (!$validator->fails()) {
+            $category = new Category();
+            $category->name = $request->input('name');
+            $isSaved = $category->save();
+            return response()->json(
+                ['message' => $isSaved ? 'Save successfully' : 'Save Failed'],
+                $isSaved ? Response::HTTP_CREATED :Response::HTTP_BAD_REQUEST
+            );
+        } else {
+            return response()->json(
+                ['message' => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 
     /**
@@ -39,6 +60,8 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         //
+        $subCategories = $category->subCategories;
+        return response()->json(['subCategories' => $subCategories]);
     }
 
     /**
@@ -47,6 +70,7 @@ class CategoryController extends Controller
     public function edit(Category $category)
     {
         //
+        return response()->view('cms.categories.edit', ['category' => $category]);
     }
 
     /**
@@ -55,6 +79,23 @@ class CategoryController extends Controller
     public function update(Request $request, Category $category)
     {
         //
+        $validator = Validator($request->all(), [
+            'name' => 'required|string',
+        ]);
+
+        if (!$validator->fails()) {
+            $category->name = $request->input('name');
+            $isSaved = $category->save();
+            return response()->json(
+                ['message' => $isSaved ? 'Save successfully' : 'Save Failed'],
+                $isSaved ? Response::HTTP_OK :Response::HTTP_BAD_REQUEST
+            );
+        } else {
+            return response()->json(
+                ['message' => $validator->getMessageBag()->first()],
+                Response::HTTP_BAD_REQUEST
+            );
+        }
     }
 
     /**
@@ -63,5 +104,10 @@ class CategoryController extends Controller
     public function destroy(Category $category)
     {
         //
+        $isDeleted = $category->delete();
+        return response()->json(
+            ['message' => $isDeleted ? 'Delete successfully' : 'Delete Failed'],
+            $isDeleted ? Response::HTTP_OK :Response::HTTP_BAD_REQUEST
+        );
     }
 }

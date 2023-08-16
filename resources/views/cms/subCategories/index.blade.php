@@ -44,15 +44,15 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($categories as $category)
-                                        <tr id="category_{{ $category->id }}">
+                                    @foreach ($subCategories as $subCategory)
+                                        <tr id="subCategory_{{ $subCategory->id }}">
                                             <td>{{ $loop->index + 1 }}</td>
-                                            <td>{{ $category->name }}</td>
-                                            {{-- <td><a href="{{route('category.edit-permissions' , $category->id)}}" type="button" class="btn btn-block btn-outline-primary btn-sm">({{ $category->permissions_count }}) Permission/s</a></td> --}}
+                                            <td>{{ $subCategory->name }}</td>
+                                            {{-- <td><a href="{{route('subCategory.edit-permissions' , $subCategory->id)}}" type="button" class="btn btn-block btn-outline-primary btn-sm">({{ $subCategory->permissions_count }}) Permission/s</a></td> --}}
                                             <td class="options">
-                                                <a href="{{ route('categories.edit', $category->id) }}">Edit</a>
+                                                <a href="{{ route('sub-categories.edit', $subCategory->id) }}">Edit</a>
                                                 <button class="delete-btn" type="button"
-                                                    onclick="deleteRoles('{{ $category->id }}')" style="color: red">
+                                                    onclick="deleteRoles('{{ $subCategory->id }}')" style="color: red">
                                                     Delete</button>
                                             </td>
                                         </tr>
@@ -75,9 +75,9 @@
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script>
         function deleteRoles(id) {
-            axios.delete(`/cms/admin/categories/${id}`)
+            axios.delete(`/cms/admin/sub-categories/${id}`)
                 .then(function(response) {
-                    document.getElementById(`category_${id}`).remove();
+                    document.getElementById(`subCategory_${id}`).remove();
                     Swal.fire({
                         position: 'center',
                         icon: 'success',

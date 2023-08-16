@@ -39,20 +39,22 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 5%">ID</th>
-                                        <th style="width: 55%">Name</th>
+                                        <th style="width: 55%">Title</th>
+                                        <th style="width: 55%">Info</th>
                                         <th style="width: 40%">Settings</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($categories as $category)
-                                        <tr id="category_{{ $category->id }}">
+                                    @foreach ($tasks as $task)
+                                        <tr id="category_{{ $task->id }}">
                                             <td>{{ $loop->index + 1 }}</td>
-                                            <td>{{ $category->name }}</td>
-                                            {{-- <td><a href="{{route('category.edit-permissions' , $category->id)}}" type="button" class="btn btn-block btn-outline-primary btn-sm">({{ $category->permissions_count }}) Permission/s</a></td> --}}
+                                            <td>{{ $task->title }}</td>
+                                            <td>{{ $task->info }}</td>
+                                            {{-- <td><a href="{{route('task.edit-permissions' , $task->id)}}" type="button" class="btn btn-block btn-outline-primary btn-sm">({{ $task->permissions_count }}) Permission/s</a></td> --}}
                                             <td class="options">
-                                                <a href="{{ route('categories.edit', $category->id) }}">Edit</a>
+                                                <a href="{{ route('tasks.edit', $task->id) }}">Edit</a>
                                                 <button class="delete-btn" type="button"
-                                                    onclick="deleteRoles('{{ $category->id }}')" style="color: red">
+                                                    onclick="deleteRoles('{{ $task->id }}')" style="color: red">
                                                     Delete</button>
                                             </td>
                                         </tr>
@@ -75,7 +77,7 @@
     <script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
     <script>
         function deleteRoles(id) {
-            axios.delete(`/cms/admin/categories/${id}`)
+            axios.delete(`/cms/admin/tasks/${id}`)
                 .then(function(response) {
                     document.getElementById(`category_${id}`).remove();
                     Swal.fire({
