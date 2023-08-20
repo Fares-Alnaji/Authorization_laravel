@@ -26,7 +26,7 @@ use Illuminate\Support\Facades\Route;
 
 
 /* --------------- Login ---------------*/
-Route::prefix('cms')->middleware('guest:admin')->group(function () {
+Route::prefix('cms')->middleware('guest:admin,user')->group(function () {
     Route::get('{guard}/login', [AuthController::class, 'showLogin'])->name('auth.login');
     Route::post('login', [AuthController::class, 'login']);
 });

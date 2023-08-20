@@ -16,12 +16,14 @@ class AuthController extends Controller
         $request->merge(['guard' => $request->guard]);
 
         $validator = Validator($request->all(),[
-            'guard' => 'required|string|in:admin,user',
+            'guard' => 'required|string|in:admin',
         ]);
         session()->put('guard', $request->input('guard'));
         if(! $validator->fails()){
             return response()->view('cms.auth.login');
-        }else{
+        }else if($request->input('guard') == 'user'){
+            return response()->view('cms.auth.login-user');
+        } else {
             abort(404);
         }
 
@@ -63,6 +65,7 @@ class AuthController extends Controller
     public function editPassword(){
         return response()->view('cms.auth.edit-password');
     }
+
     public function updatePassword(Request $request){
         $guard = session('guard');
         $validator = Validator($request->all(),[

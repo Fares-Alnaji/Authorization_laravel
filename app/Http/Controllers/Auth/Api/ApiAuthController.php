@@ -84,14 +84,27 @@ class ApiAuthController extends Controller
         ]);
 
         if (!$validator->fails()) {
-            $user = User::where('email', '=', $request->input('email'))->first();
-            $response = Http::asForm()->post('http://127.0.0.1:8001/oauth/token', [
-                'grant_type' => 'password',
-                'client_id' => '2',
-                'client_secret' => 'M3p9TdNeGc2UgmCQBM0RSaCdVnG2GZHKoE2AMdg4',
-                'username' => $request->input('email'),
-                'password' => $request->input('password'),
-            ]);
+            try {
+                $response = Http::asForm()->post('http://127.0.0.1:8001/oauth/token', [
+                    'grant_type' => 'password',
+                    'client_id' => '6',
+                    'client_secret' => 'rYXfsas5tRZ4St09GTDh2JBgkRuOUBowgqpzG8Oq',
+                    'username' => $request->input('email'),
+                    'password' => $request->input('password'),
+                ]);
+                $user = User::where('email', '=', $request->input('email'))->first();
+                $jsonResponse = $response->json();
+                $user->setAttribute('token', $jsonResponse['access_token']);
+                return response()->json(
+                    ['message' => 'Login successful' , 'object' => $user],
+                    Response::HTTP_OK
+                );
+            } catch (\Throwable $th) {
+                return response()->json(
+                    ['status' => false , 'message' => $th->getMessage()],
+                    Response::HTTP_BAD_REQUEST
+                );
+            }
         } else {
             return response()->json(
                 ['status' => false, 'message' => 'Wrong Password, try again!'],

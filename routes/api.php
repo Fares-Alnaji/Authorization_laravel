@@ -22,6 +22,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::prefix('auth')->group(function () {
     Route::post('register',[ApiAuthController::class, 'register']);
     Route::post('login',[ApiAuthController::class, 'personalLogin']);
+    Route::post('password-login',[ApiAuthController::class, 'passwordGrantLogin']);
     Route::post('forgot-password',[ApiAuthController::class, 'forgotPassword']);
     Route::post('reset-password',[ApiAuthController::class, 'resetPassword']);
 });
