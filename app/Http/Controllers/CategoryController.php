@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Category;
 use Dotenv\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class CategoryController extends Controller
@@ -12,11 +13,25 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         //
         $categories = Category::all();
-        return response()->view('cms.categories.index', ['categories' => $categories]);
+        if (Auth::guard('user-api')->check()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Success',
+                'data' => $categories
+            ]);
+        } else {
+            return response()->view('cms.categories.index', ['categories' => $categories]);
+        }
+        // Or :-
+        // if ($request->expectsJson()) {
+        //     return response()->json(['data' => $categories]);
+        // } else {
+        //     return response()->view('cms.categories.index', ['categories' => $categories]);
+        // }
     }
 
     /**
@@ -44,7 +59,7 @@ class CategoryController extends Controller
             $isSaved = $category->save();
             return response()->json(
                 ['message' => $isSaved ? 'Save successfully' : 'Save Failed'],
-                $isSaved ? Response::HTTP_CREATED :Response::HTTP_BAD_REQUEST
+                $isSaved ? Response::HTTP_CREATED : Response::HTTP_BAD_REQUEST
             );
         } else {
             return response()->json(
@@ -60,8 +75,17 @@ class CategoryController extends Controller
     public function show(Category $category)
     {
         //
-        $subCategories = $category->subCategories;
-        return response()->json(['subCategories' => $subCategories]);
+        if (Auth::guard('user-api')->check()) {
+            $subCategories = $category->subCategories()->get(['id','name','category_id']);
+            return response()->json([
+                'status' => true,
+                'message' => 'Success',
+                'sub_categories' => $subCategories
+            ]);
+        } else {
+            $subCategories = $category->subCategories;
+            return response()->json(['subCategories' => $subCategories]);
+        }
     }
 
     /**
@@ -88,7 +112,7 @@ class CategoryController extends Controller
             $isSaved = $category->save();
             return response()->json(
                 ['message' => $isSaved ? 'Save successfully' : 'Save Failed'],
-                $isSaved ? Response::HTTP_OK :Response::HTTP_BAD_REQUEST
+                $isSaved ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
             );
         } else {
             return response()->json(
@@ -107,7 +131,7 @@ class CategoryController extends Controller
         $isDeleted = $category->delete();
         return response()->json(
             ['message' => $isDeleted ? 'Delete successfully' : 'Delete Failed'],
-            $isDeleted ? Response::HTTP_OK :Response::HTTP_BAD_REQUEST
+            $isDeleted ? Response::HTTP_OK : Response::HTTP_BAD_REQUEST
         );
     }
 }

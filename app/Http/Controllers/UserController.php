@@ -22,7 +22,8 @@ class UserController extends Controller
 
     public function editPermissions(Request $request , User $user)
     {
-        $permissions = Permission::where('guard_name', '=' , 'user')->get();
+        $permissions = Permission::where('guard_name', '=' , 'user')
+        ->orWhere('guard_name', '=' , 'user-api')->get();
         $userPermissions = $user->permissions;
         foreach ($permissions as $permission){
             $permission->setAttribute('assigned', false);
@@ -43,7 +44,8 @@ class UserController extends Controller
         ]);
 
         if(!$Validator->fails()){
-            $permission = Permission::findById($request->input('permission_id'),'user');
+            // $permission = Permission::findById($request->input('permission_id'),'user');
+            $permission = Permission::findOrFail($request->input('permission_id'));
             $user->hasPermissionTo($permission)
             ? $user->revokePermissionTo($permission)
             :  $user->givePermissionTo($permission);

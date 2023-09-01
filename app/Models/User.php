@@ -14,6 +14,7 @@ use Laravel\Passport\HasApiTokens;
 // use Laravel\Sanctum\HasApiTokens;
 use Spatie\Permission\Traits\HasRoles;
 
+
 class User extends Authenticatable implements MustVerifyEmail
 {
     use HasApiTokens, HasFactory, Notifiable , HasRoles;
@@ -69,5 +70,9 @@ class User extends Authenticatable implements MustVerifyEmail
     public function validateForPassportPasswordGrant(string $password): bool
     {
         return Hash::check($password, $this->password);
+    }
+
+    public function tasks() {
+        return $this->hasMany(Task::class, 'user_id' , 'id');
     }
 }

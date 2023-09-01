@@ -24,6 +24,9 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::get('test', function () {
+    echo 'test';
+});
 
 /* --------------- Login ---------------*/
 Route::prefix('cms')->middleware('guest:admin,user')->group(function () {

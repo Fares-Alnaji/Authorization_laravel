@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Auth\Api\ApiAuthController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\TaskController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,6 +27,13 @@ Route::prefix('auth')->group(function () {
     Route::post('password-login',[ApiAuthController::class, 'passwordGrantLogin']);
     Route::post('forgot-password',[ApiAuthController::class, 'forgotPassword']);
     Route::post('reset-password',[ApiAuthController::class, 'resetPassword']);
+});
+
+Route::middleware('auth:user-api')->group(function () {
+    Route::get('categories', [CategoryController::class , 'index']);
+    Route::get('categories/{category}', [CategoryController::class , 'show']);
+
+    Route::apiResource('tasks' , TaskController::class);
 });
 
 Route::prefix('auth')->middleware('auth:user-api')->group(function () {
