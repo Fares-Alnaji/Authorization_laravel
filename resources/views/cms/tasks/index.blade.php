@@ -39,8 +39,9 @@
                                 <thead>
                                     <tr>
                                         <th style="width: 5%">ID</th>
-                                        <th style="width: 55%">Title</th>
-                                        <th style="width: 55%">Info</th>
+                                        <th>Image</th>
+                                        <th style="width: 40%">Title</th>
+                                        <th style="width: 40%">Info</th>
                                         <th style="width: 40%">Settings</th>
                                     </tr>
                                 </thead>
@@ -48,6 +49,10 @@
                                     @foreach ($tasks as $task)
                                         <tr id="category_{{ $task->id }}">
                                             <td>{{ $loop->index + 1 }}</td>
+                                            <td>
+                                                <img class="direct-chat-img" src="{{ Storage::url($task->image) }}"
+                                                    alt="message user image">
+                                            </td>
                                             <td>{{ $task->title }}</td>
                                             <td>{{ $task->info }}</td>
                                             {{-- <td><a href="{{route('task.edit-permissions' , $task->id)}}" type="button" class="btn btn-block btn-outline-primary btn-sm">({{ $task->permissions_count }}) Permission/s</a></td> --}}

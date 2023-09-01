@@ -63,6 +63,17 @@
                                     <input type="text" class="form-control" id="info" name="info"
                                         placeholder="Enter the Info">
                                 </div>
+
+                                <div class="form-group">
+                                    <label for="task_image">File input</label>
+                                    <div class="input-group">
+                                        <div class="custom-file">
+                                            <input type="file" class="custom-file-input" id="task_image"
+                                                name="task_image">
+                                            <label class="custom-file-label" for="task_image">Choose file</label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="card-footer">
@@ -122,16 +133,25 @@
     <script>
         function performSave() {
 
-            let dataObject =  {
-                    sub_category_id: document.getElementById('sub_category_id').value,
-                    title: document.getElementById('title').value,
-                    info: document.getElementById('info').value,
-                }
+            let formData = new FormData();
+            formData.append('sub_category_id', document.getElementById('sub_category_id').value);
+            formData.append('title', document.getElementById('title').value);
+            formData.append('info', document.getElementById('info').value);
+            formData.append('task_image', document.getElementById('task_image').files[0]);
+            // let dataObject =  {
+            //         sub_category_id: document.getElementById('sub_category_id').value,
+            //         title: document.getElementById('title').value,
+            //         info: document.getElementById('info').value,
+            //     }
 
-                if('{{auth("admin")->check()}}') {
-                    dataObject['user_id'] = document.getElementById('user_id').value;
-                }
-            axios.post('/cms/admin/tasks', dataObject)
+            //     if('{{ auth('admin')->check() }}') {
+            //         dataObject['user_id'] = document.getElementById('user_id').value;
+            //     }
+            if ('{{ auth('admin')->check() }}') {
+                formData.append('user_id', document.getElementById('user_id').value);
+            }
+
+            axios.post('/cms/admin/tasks', formData)
                 .then(function(response) {
                     toastr.success(response.data.message);
                 })
@@ -139,5 +159,11 @@
                     toastr.error(error.response.data.message);
                 })
         }
+    </script>
+    <script src="{{ asset('cms/plugins/bs-custom-file-input/bs-custom-file-input.min.js') }}"></script>
+    <script>
+        $(function() {
+            bsCustomFileInput.init();
+        });
     </script>
 @endsection

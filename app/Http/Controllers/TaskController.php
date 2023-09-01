@@ -67,6 +67,7 @@ class TaskController extends Controller
             'sub_category_id' => 'required|numeric|exists:sub_categories,id',
             'title' => 'required|string',
             'info' => 'required|string',
+            'task_image' => 'required|image|mimes:jpg,png|max:1024',
         ]);
 
         if (!$validator->fails()) {
@@ -79,6 +80,12 @@ class TaskController extends Controller
                 $task->user_id = $request->input('user_id');
             } else {
                 $task->user_id = $request->user()->id;
+            }
+            if($request->hasFile('task_image')) {
+                $image = $request->file('task_image');
+                $imageName = time() . '_task_image.' . $image->extension();
+                $image->storeAs('tasks' , $imageName , ['disk' => 'public']);
+                $task->image = 'tasks/' . $imageName;
             }
 
             $isSaved = $task->save();
